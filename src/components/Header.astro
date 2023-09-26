@@ -1,14 +1,34 @@
-<nav class="w-full px-4 py-4 flex items-center justify-between sticky top-0 bg-red-500">
-    <div>
-        <a class="text-4xl font-bold" href="/">John Mcquare</a>
-    </div>
-    <ul class="flex items-center justify-center gap-4">
-        <li>
-            <a href="#About">AboutMe</a>
-        </li>
+<nav class="px-4 py-8 flex items-center justify-between sticky top-0 z-50 backdrop-blur-xl">
+  <div>
+    <a id="headerText" class="text-4xl font-bold absolute " href="/">John Mcquare</a>
+  </div>
+  <ul class="flex items-center justify-center gap-4">
+    <li>
+      <a href="#About">AboutMe</a>
+    </li>
 
-        <li>
-            <a href="#About">Works</a>
-        </li>
-    </ul>
+    <li>
+      <a href="#About">Works</a>
+    </li>
+  </ul>
 </nav>
+
+<script>
+  import gsap from "gsap"
+  import { ScrollTrigger } from "gsap/ScrollTrigger"
+  console.log("hello world")
+  gsap.registerPlugin(ScrollTrigger)
+  const animate = gsap.timeline()
+  const middle = window.innerWidth / 2
+
+  animate.from("#headerText", {
+    x: window.innerWidth / 2,
+    xPercent: -50,
+    y:window.innerHeight / 10,
+    yPercent: -30,
+    
+    delay:2,
+    fontSize:window.innerWidth / 11 ,
+    color:"#FFF"
+  })
+</script>
