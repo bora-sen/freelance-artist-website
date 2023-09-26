@@ -10,6 +10,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^3.1.4"
+    "@astrojs/tailwind": "^5.0.0",
+    "astro": "^3.1.4",
+    "gsap": "^3.12.2",
+    "three": "^0.156.1"
+  },
+  "devDependencies": {
+    "dat.gui": "^0.7.9"
   }
 }
