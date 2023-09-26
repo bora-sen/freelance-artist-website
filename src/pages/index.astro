@@ -1,16 +1,16 @@
 ---
-
+import MainLayout from "../layouts/Main.astro"
+import {Hero,AboutMe, Works, ContactMe, ThreeDScrollingBackground} from "../sections"
+import {Footer, Header} from "../components"
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Initial</title>
-	</head>
-	<body>
-		<h1>Initial Commit</h1>
-	</body>
-</html>
+<MainLayout>
+	<Header />
+	<ThreeDScrollingBackground>
+		<Hero />
+		<AboutMe />
+		<Works />
+		<ContactMe />
+		<Footer />
+	</ThreeDScrollingBackground>
+</MainLayout>

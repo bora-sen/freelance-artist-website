@@ -1,0 +1,5 @@
+export { default as AboutMe } from "./AboutMe.astro"
+export { default as ContactMe } from "./ContactMe.astro"
+export { default as Hero } from "./Hero.astro"
+export { default as ThreeDScrollingBackground } from "./ThreeDScrollingBackground.astro"
+export { default as Works } from "./Works.astro"
