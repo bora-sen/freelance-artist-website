@@ -1,157 +1,242 @@
 <div id="threedscrolling">
-    <canvas id="webglCanvas" class="w-full h-screen fixed -z-50 bg-darkGray"></canvas>
-
-    <slot />
+  <canvas id="webglCanvas" class="w-full h-screen fixed -z-50 bg-cover bg-center"></canvas>
+  <slot />
 </div>
 
 <script>
-    import {GUI} from "dat.gui"
-    import * as THREE from "three"
-    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+  //import { GUI } from "dat.gui"
+  import * as THREE from "three"
+  import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 
-    import gsap from "gsap"
-    import { ScrollTrigger } from "gsap/ScrollTrigger";
-    gsap.registerPlugin(ScrollTrigger)
+  import gsap from "gsap"
+  import { ScrollTrigger } from "gsap/ScrollTrigger"
+  gsap.registerPlugin(ScrollTrigger)
 
-	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    camera.position.set(0,0,3)
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
+  camera.position.set(0, 0, 3)
 
-    const canvasEl = document.getElementById("webglCanvas")
-	const renderer = new THREE.WebGLRenderer({camera,canvas:canvasEl,alpha:true});
-	renderer.setSize( window.innerWidth, window.innerHeight );
+  const canvasEl = document.getElementById("webglCanvas")
+  const renderer = new THREE.WebGLRenderer({ camera, canvas: canvasEl, alpha: true })
+  renderer.setSize(window.innerWidth, window.innerHeight)
 
-    const light = new THREE.AmbientLight( {color:"#FFF",density:0.2} ); // soft white light
+  const pointLight = new THREE.PointLight("#FFF", 1, 100)
+  pointLight.position.set(0, 1, 3)
+  scene.add(pointLight)
 
-    const pointLight = new THREE.PointLight( "#f5eee6", 1, 100 );
-    pointLight.position.set( 0,1,3 );
-    scene.add( pointLight );
+  const keyframes = {
+    initial: {
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      bgColor: "#F00",
+    },
+    heroSection: {
+      position: {
+        x: 0,
+        y: -0.28,
+        z: 2.43,
+      },
+      rotation: {
+        x: 2.87,
+        y: -0.875,
+        z: 0,
+      },
+      bgColor: "#F00",
+    },
+    aboutMeSection: {
+      position: {
+        x: 0.0315,
+        y: -0.31,
+        z: 2.43,
+      },
+      rotation: {
+        x: 2.914,
+        y: 0.2715,
+        z: 0,
+      },
+      bgColor: "#0FF",
+    },
+    worksSection: {
+      position: {
+        x: -0.169,
+        y: -0.169,
+        z: 2.6935,
+      },
+      rotation: {
+        x: 2.4735,
+        y: -1.49,
+        z: 0,
+      },
+      bgColor: "#0c0",
+    },
+    contactMeSection: {
+      position: {
+        x: -0.169,
+        y: -0.385,
+        z: 2.6935,
+      },
+      rotation: {
+        x: 3.354,
+        y: -0.389,
+        z: 0,
+      },
+      bgColor: "#000",
+    },
+    footerSection: {
+      position: {
+        x: -0.03,
+        y: -0.28,
+        z: 2.43,
+      },
+      rotation: {
+        x: 3.5745,
+        y: -0.825,
+        z: 0.0515,
+      },
+      bgColor: "#F0F",
+    },
+  }
 
+  // Instantiate a loader
+  const loader = new GLTFLoader()
 
+  async function init() {
+    async function loadModel() {
+      const model = await loader.loadAsync("/asset/model/head_of_david.glb", (xhr) => {
+        console.log(`Loading Model => (${xhr.loaded}/${xhr.total})`)
+      })
 
-    const keyframes = {
-        heroSection:{
-            position:{
-                x:0,
-                y:-0.28,
-                z:2.43
-            },
-            rotation:{
-                x:2.87,
-                y:-0.875,
-                z:0
-            }
-        },
-        aboutMeSection:{
-            position:{
-                x:0.0315,
-                y:-0.31,
-                z:2.43
-            },
-            rotation:{
-                x:2.914,
-                y:0.2715,
-                z:0
-            }
-        },
-        worksSection:{
-            position:{
-                x:-0.169,
-                y:-0.169,
-                z:2.6935
-            },
-            rotation:{
-                x:2.4735,
-                y:-1.49,
-                z:0
-            }
-        },
-        contactMeSection:{
-            position:{
-                x:-0.169,
-                y:-0.385,
-                z:2.6935
-            },
-            rotation:{
-                x:3.354,
-                y:-0.389,
-                z:0
-            }
-        },
-        footerSection:{
-            position:{
-                x:-0.03,
-                y:-0.28,
-                z:2.43
-            },
-            rotation:{
-                x:3.5745,
-                y:-0.825,
-                z:0.0515
-            }
-        },
-    }
+      scene.add(await model.scene)
 
-    // Instantiate a loader
-    const loader = new GLTFLoader();
+      const loadedModel = scene.children[1].children[0]
+      loadedModel.position.set(keyframes.heroSection.position.x, keyframes.heroSection.position.y, keyframes.heroSection.position.z)
+      loadedModel.rotation.set(keyframes.heroSection.rotation.x, keyframes.heroSection.rotation.y, keyframes.heroSection.rotation.z)
 
-    async function init(){
-
-
-    async function loadModel(){
-        const model = await loader.loadAsync( '/asset/model/head_of_david.glb',(xhr) => {
-            console.log(`${xhr.loaded}/${xhr.total}`);
-        });
-
-        scene.add(await model.scene)
-
-        const loadedModel = scene.children[1].children[0]
-        loadedModel.position.set(0,-0.28,2.43)
-        loadedModel.rotation.set(2.87,-0.875,0)
-
-
-        function renderGUI(){
-
+      /*
+      function renderGUI() {
         const gui = new GUI()
         const positionFolder = gui.addFolder("Model Position")
-        positionFolder.add(loadedModel.position,'x',-10,10,0.0005)
-        positionFolder.add(loadedModel.position,'y',-10,10,0.0005)
-        positionFolder.add(loadedModel.position,'z',-10,10,0.0005)
+        positionFolder.add(loadedModel.position, "x", -10, 10, 0.0005)
+        positionFolder.add(loadedModel.position, "y", -10, 10, 0.0005)
+        positionFolder.add(loadedModel.position, "z", -10, 10, 0.0005)
         positionFolder.open()
-        
+
         const rotationFolder = gui.addFolder("Model Rotation")
-        rotationFolder.add(loadedModel.rotation,'x',-10,10,0.0005)
-        rotationFolder.add(loadedModel.rotation,'y',-10,10,0.0005)
-        rotationFolder.add(loadedModel.rotation,'z',-10,10,0.0005)
+        rotationFolder.add(loadedModel.rotation, "x", -10, 10, 0.0005)
+        rotationFolder.add(loadedModel.rotation, "y", -10, 10, 0.0005)
+        rotationFolder.add(loadedModel.rotation, "z", -10, 10, 0.0005)
         rotationFolder.open()
-        }
-        return loadedModel
+      }
+      */
+
+      return loadedModel
     }
     const loadedModel = await loadModel()
-    console.log(await loadedModel);
-    gsap.fromTo(loadedModel.position,{
-        x:0,
-        y:-2,
-        z:0,
-        duration:4,
-        ease:"power4.inOut"
-    },{
-        x:keyframes.heroSection.position.x,
-        y:keyframes.heroSection.position.y,
-        z:keyframes.heroSection.position.z
-    })
+    //console.log(await loadedModel);
+
+    const animate = gsap.timeline()
+
+    function createAnimationTween(triggerEl, beforeKeyframe, afterKeyframe, markers) {
+      animate.fromTo(
+        loadedModel.position,
+        {
+          x: beforeKeyframe.position.x,
+          y: beforeKeyframe.position.y,
+          z: beforeKeyframe.position.z,
+        },
+        {
+          scrollTrigger: {
+            trigger: triggerEl,
+            start: "top+=100 bottom",
+            end: "center center",
+            scrub: true,
+            markers,
+          },
+          x: afterKeyframe.position.x,
+          y: afterKeyframe.position.y,
+          z: afterKeyframe.position.z,
+        }
+      )
+      animate.fromTo(
+        loadedModel.rotation,
+        {
+          x: beforeKeyframe.rotation.x,
+          y: beforeKeyframe.rotation.y,
+          z: beforeKeyframe.rotation.z,
+        },
+        {
+          scrollTrigger: {
+            trigger: triggerEl,
+            start: "top+=100 bottom",
+            end: "center center",
+            scrub: true,
+            markers,
+          },
+          x: afterKeyframe.rotation.x,
+          y: afterKeyframe.rotation.y,
+          z: afterKeyframe.rotation.z,
+        }
+      )
+
+      animate.fromTo(
+        document.body,
+        {
+          backgroundColor: beforeKeyframe.bgColor,
+        },
+        {
+          scrollTrigger: {
+            trigger: triggerEl,
+            start: "top+=100 bottom",
+            end: "center center",
+            scrub: true,
+            markers,
+          },
+          backgroundColor: afterKeyframe.bgColor,
+        }
+      )
+    }
+    function createInitialAnimationTween() {
+      animate.to(loadedModel.position, {
+        x: keyframes.heroSection.position.x,
+        y: keyframes.heroSection.position.y,
+        z: keyframes.heroSection.position.z,
+      })
+
+      animate.to(loadedModel.rotation, {
+        x: keyframes.heroSection.rotation.x,
+        y: keyframes.heroSection.rotation.y,
+        z: keyframes.heroSection.rotation.z,
+      })
+
+      animate.fromTo(
+        document.body,
+        {
+          backgroundColor: keyframes.heroSection.bgColor,
+        },
+        {
+          backgroundColor: keyframes.heroSection.bgColor,
+        }
+      )
     }
 
+    createInitialAnimationTween()
+    createAnimationTween("#AboutMe", keyframes.heroSection, keyframes.aboutMeSection, true)
+    createAnimationTween("#Works", keyframes.aboutMeSection, keyframes.worksSection, true)
+    createAnimationTween("#ContactMe", keyframes.worksSection, keyframes.contactMeSection, true)
+    createAnimationTween("#Footer", keyframes.contactMeSection, keyframes.footerSection, true)
+  }
 
-
-
-
-    init()
-
-	function animate(){
-		requestAnimationFrame(animate)
-		renderer.render(scene,camera)
-	}
-	animate()
-
+  function animate() {
+    requestAnimationFrame(animate)
+    renderer.render(scene, camera)
+  }
+  init().then(animate)
 </script>
